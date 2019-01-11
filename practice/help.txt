@@ -1,0 +1,79 @@
+
+
+
+
+
+Advantages
+
+C++ templates enable you to define a family of functions or classes that can operate on different types of information.
+
+Use templates in situations that result in duplication of the same code for multiple types. 
+For example, you can use function templates to create a set of functions that apply the same algorithm to different data types.
+
+You can also use class templates to develop a set of typesafe classes.
+
+Templates are sometimes a better solution than C macros and void pointers, 
+and they are especially useful when working with collections (one of the main uses for templates in MFC) and smart pointers (from MSDN).
+
+A. Stepanov (the creator of STL) notes that some things that seem trivial using templates (such as equality operator, for example) are very difficult to implement with conventional OO techniques such as inheritance and polymorphism.
+
+Because their parameters are known at compile time, template classes are more typesafe, and could be preferred over run-time resolved code structures (such as abstract classes). There are some modern techniques that can dramatically reduce code bloat when using templates. Note that these techniques are very complex either.
+
+Often, the main reason to use templates in combination with STL – it can drastically reduce development time.
+
+
+
+
+
+Disadvantages
+
+Historically, some compilers exhibited poor support for templates. So, the use of templates could decrease code portability.
+
+Many compilers lack clear instructions when they detect a template definition error. This can increase the effort of developing templates, and has prompted the development of Concepts for possible inclusion in a future C++ standard.
+
+Since the compiler generates additional code for each template type, indiscriminate use of templates can lead to code bloat, resulting in larger executables. For example, used in Adobe products "… GIL (Generic Image Library) implements type generators. 
+
+One of these generators generates all image types that are combinations of given sets of color spaces and channels. 
+
+This code defines any image t to be one of 4×3×2×2 = 48 possible image types. It can have any of the four listed color spaces, any of the three listed channel depths, it can be interleaved or planar and its pixels can be adjacent or non-adjacent in memory. 
+
+The above code generates 48 × 48 = 2304 instantiations. Without any special handling, the code bloat will be out of control." 
+
+See Efficient Run-Time Dispatching in Generic Programming with Minimal Code Bloat, 2004.
+Because a template by its nature exposes its implementation, injudicious use in large systems can lead to longer build times.
+
+It can be difficult to debug code that is developed using templates. Since the compiler replaces the templates, it becomes difficult for the debugger to locate the code at runtime.
+Templates are in the headers, which require a complete rebuild of all project pieces when changes are made.
+
+No information hiding. All code is exposed in the header file. No one library can solely contain the code (from Wikipedia).
+
+Though STL itself is a collection of template classes, templates are not used to write conventional libraries. 
+
+The libraries of templates are header-only: the library code is included in and compiled with the user's code. 
+
+Though, this makes installation and usage of the libraries relatively easy.
+
+
+
+
+
+
+
+
+Prefer a template over derived classes when run-time efficiency is at a premium
+
+Prefer derived classes over a template if adding new variants without recompilation is important
+
+Prefer a template over derived classes when no common base can be defined
+
+Prefer a template over derived classes when built-in types and structures with compatibility constraints are important
+
+
+
+From the point of view of the compiler, templates are not normal functions or classes. They are compiled on demand, meaning that the code of a template function is not compiled until an instantiation with specific template arguments is required. At that moment, when an instantiation is required, the compiler generates a function specifically for those arguments from the template.
+
+When projects grow it is usual to split the code of a program in different source code files. In these cases, the interface and implementation are generally separated. Taking a library of functions as example, the interface generally consists of declarations of the prototypes of all the functions that can be called. These are generally declared in a "header file" with a .h extension, and the implementation (the definition of these functions) is in an independent file with c++ code.
+
+Because templates are compiled when required, this forces a restriction for multi-file projects: the implementation (definition) of a template class or function must be in the same file as its declaration. That means that we cannot separate the interface in a separate header file, and that we must include both interface and implementation in any file that uses the templates.
+
+Since no code is generated until a template is instantiated when required, compilers are prepared to allow the inclusion more than once of the same template file with both declarations and definitions in a project without generating linkage errors.
